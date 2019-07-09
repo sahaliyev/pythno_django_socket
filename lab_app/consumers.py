@@ -13,7 +13,9 @@ class ChatConsumer(AsyncConsumer):
 
         post_id = self.scope['url_route']['kwargs']['post_id']
 
-        comments = list(Comments.objects.filter(post_id=post_id, visible=True).order_by('-pub_date').values('id', 'owner', 'comment'))
+        comments = list(
+            Comments.objects.filter(post_id=post_id, visible=True).order_by('-pub_date').values('id', 'owner',
+                                                                                                'comment'))
 
         chat_room = post_id
         self.chat_room = chat_room
@@ -49,12 +51,14 @@ class ChatConsumer(AsyncConsumer):
                 user = self.scope['session']['email']
                 user_id = User.objects.get(username=user).pk
 
+                comment_id = await self.create_comment_object(writed_comment)
+                print(id)
+
                 my_response = {
+                    'id': comment_id,
                     'comment': writed_comment,
                     'owner': user_id
                 }
-
-                await self.create_comment_object(writed_comment)
 
                 await self.channel_layer.group_send(
                     self.chat_room,
@@ -70,7 +74,9 @@ class ChatConsumer(AsyncConsumer):
                 edited_comment_obj.comment = edited_comment
                 edited_comment_obj.save()
 
-                comments = list(Comments.objects.filter(post_id=post_id, visible=True).order_by('-pub_date').values('id', 'owner', 'comment'))
+                comments = list(
+                    Comments.objects.filter(post_id=post_id, visible=True).order_by('-pub_date').values('id', 'owner',
+                                                                                                        'comment'))
 
                 await self.channel_layer.group_send(
                     self.chat_room,
@@ -86,7 +92,9 @@ class ChatConsumer(AsyncConsumer):
                 edited_comment_obj.visible = False
                 edited_comment_obj.save()
 
-                comments = list(Comments.objects.filter(post_id=post_id, visible=True).order_by('-pub_date').values('id', 'owner', 'comment'))
+                comments = list(
+                    Comments.objects.filter(post_id=post_id, visible=True).order_by('-pub_date').values('id', 'owner',
+                                                                                                        'comment'))
 
                 await self.channel_layer.group_send(
                     self.chat_room,
@@ -111,4 +119,5 @@ class ChatConsumer(AsyncConsumer):
         user = User.objects.get(username=username)
         post_id = self.scope['url_route']['kwargs']['post_id']
         post = UploadImage.objects.get(pk=post_id)
-        return Comments.objects.create(owner=user, post=post, comment=comment)
+        new_comment = Comments.objects.create(owner=user, post=post, comment=comment)
+        return new_comment.id
