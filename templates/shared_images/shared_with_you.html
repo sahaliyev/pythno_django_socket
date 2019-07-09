@@ -1,0 +1,19 @@
+{% extends 'index/index.html' %}
+{% block content %}
+<div class="container">
+    <div class="row" style="margin-top: 20px">
+        {% for post in shared_posts%}
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <a href="{% url 'details' post.image.id %}">{{post.image.title}}</a>
+                </div>
+                <div class="card-body">
+                    <img src="{{post.image.thumbnails.url}}" class="img-responsive">
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'index/index.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div style="margin-top: 20px;">
+        <h3>{{post.title}}</h3>
+        <!--        <span class="hidden" data-id="{{post.id}}" id="post_id"></span>-->
+        <div>
+            <img src="{{post.image.url}}" height="400" width="400">
+        </div>
+        <input type="hidden" id="session_user" name="session_user" value="{{ user }}">
+        <!--        <div class="row">-->
+        <!--            <div class="col-lg-2">{{post.pub_date|date:'Y-m-d H:i'}}</div>-->
+        <!--            <div class="col-lg-2" id="share_button">-->
+        <!--                <i class="fa fa-share-square" style="color: blue"></i>-->
+        <!--                <a data-toggle="modal" data-target="#shareModal"-->
+        <!--                   style="font-size:13px; margin-left: 3px; cursor: pointer;">Share</a>-->
+        <!--            </div>-->
+        <!--        </div>-->
+
+    </div>
+
+    {% if permission %}
+    <div class="card" id="write_a_commment" style="margin: 20px 10px 30px">
+        <div class="card-body">
+            <form id="post_comment" method="post">
+                {% csrf_token %}
+                <label>Wriet a comment</label>
+                <input type="text" class="form-control" name="comment" id="comment" required>
+                <!--                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>-->
+                <button class="btn btn-success" type="submit">Post</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-lg-12" id="comment_holder"></div>
+    <div id="">
+        <ul id="chat_holder">
+
+        </ul>
+    </div>
+</div>
+<!--delete modal-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="delete_comment_form">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Are you sure to delete this comment?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span id="body"></span>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--edit modal-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="edit_comment_form">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Comment</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" value="" class="form-control" id="edited_comment_text">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-success" type="submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/custom/hiding_some_elements.js' %}"></script>
+<script src="{% static 'js/custom/socket.js' %}"></script>
+<!--<script src="{% static 'js/custom/delete_comment.js' %}"></script>-->
+<!--<script src="{% static 'js/custom/edit_comment.js' %}"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.js"></script>
+{% endblock %}
+

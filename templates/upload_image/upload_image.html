@@ -1,0 +1,29 @@
+{% extends 'index/index.html' %}
+{% block content %}
+<div class="container">
+    <div class="card card-login mx-auto mt-5">
+        <div class="card-header">Upload Image</div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}
+<!--                <div class="form-group">-->
+<!--                    <div class="form-label-group">-->
+<!--                        <input type="text" id="title" class="form-control" placeholder="Image Title"-->
+<!--                               required="required" autofocus="autofocus" name="title">-->
+<!--                        <label for="title">Title</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <div class="form-label-group">-->
+<!--                        <input type="file" id="image" class="form-control" placeholder="Image"-->
+<!--                               required="required" name="image">-->
+<!--                        <label for="image">Image</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <button class="btn btn-primary btn-block" id="" type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

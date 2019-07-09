@@ -1,0 +1,69 @@
+{% extends 'index/index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% for image in images %}
+        {% if image.thumbnails %}
+        <div class="col-lg-3">
+            <div class="card card-login mx-auto mt-5">
+                <div class="card-header">
+                    <a href="{% url 'details' image.id %}">{{image.title}}</a>
+                </div>
+                <div class="card-body">
+                    <img src="{{image.thumbnails.url}}" class="img-responsive">
+                </div>
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <i class="fa fa-clock" style="color: blue"></i>
+                            <span style="font-size:10px; margin-left: 3px;">{{image.pub_date|date:'Y-m-d'}}</span>
+                        </div>
+                        <div class="col-lg-6">
+                            <i class="fa fa-share-square" style="color: blue"></i>
+                            <button data-toggle="modal" data-target="#shareModal"
+                                    style="font-size:13px; margin-left: 3px; cursor: pointer;"
+                                    value="{{image.id}}" id="share_post" class="share_post">Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<!-- Share Modal-->
+<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="share_post_form">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Share Your Post</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <label>Type usernama of person you want to share</label>
+                    <input type="text" class="form-control" name="username" id="username">
+                    <label>Write permission</label>
+                    <input type="checkbox" name="permission" id="permission">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-success" type="submit">Share</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script src="{% static 'js/custom/share_post.js' %}"></script>
+{% endblock %}
